@@ -24,15 +24,36 @@ public class CPUProbe {
 
     }
 
-    public static void displayInfo(Context aShit) {
+    public static void displayInfo() {
+        //int[][] cpuStats = null;
+
         CPUDetails wut = new CPUDetails(ctxt);
 
+        /*try {
+            for (int cntr = 0; cntr < wut.getCoars(); cntr++) {
+                cpuStats[cntr] = wut.getCPUUsage(ctxt, cntr);
+            }
+        } catch (Exception e) {
+            Toast.makeText(ctxt, "1: " + e,
+                    Toast.LENGTH_LONG).show();
+        }*/
+
         //god ouah
-        if (RecordUsage.debugging >= 2) {
-            Toast.makeText(aShit, "displayInfo()", Toast.LENGTH_SHORT).show();
-        } else if (RecordUsage.debugging >= 1) {
-            Toast.makeText(aShit, "Coar siblings: " +
-                    wut.getCoars(aShit), Toast.LENGTH_LONG).show();
+        if (RecordUsage.debugging >= RecordUsage.METHOD_CALLS) {
+            Toast.makeText(ctxt, "displayInfo()", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+            if (RecordUsage.debugging >= RecordUsage.GENERAL) {
+                Toast.makeText(ctxt, "Coar siblings: " +
+                        wut.getCoars(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ctxt, "Usage entries (core 0): " +
+                    wut.getCPUUsage(ctxt, 0).toString(),
+                    Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(ctxt, "2: " + e,
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

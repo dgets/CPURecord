@@ -9,8 +9,11 @@ import android.widget.Toast;
 public class RecordUsage extends AppCompatActivity {
 
     //'constants'
-    public static final int readingDelay = 3000;    //between readings (ms)
-    public static final int debugging = 1;
+    public static final int GENERAL = 1;
+    public static final int METHOD_CALLS = 2;
+
+    public static final int debugging = METHOD_CALLS;
+    //public static final int readingDelay = 3000;    //between readings (ms)
 
     public Context appShit; // = this.getApplicationContext();
 
@@ -27,13 +30,16 @@ public class RecordUsage extends AppCompatActivity {
     }
 
     public void getDebugInfos(View view) {
-        appShit = getApplicationContext();
+        appShit = getApplicationContext();  //duplicate wtf
+        CPUProbe ouah = new CPUProbe(appShit);
 
-        if (debugging >= 2) {
+        if (debugging >= METHOD_CALLS) {
             Toast.makeText(appShit, "getDebugInfos()",
                     Toast.LENGTH_SHORT).show();
-        } else if (debugging >= 1) {
-            CPUProbe.displayInfo(appShit);
+        }
+
+        if (debugging >= GENERAL) {
+            CPUProbe.displayInfo();
         }
     }
 }
