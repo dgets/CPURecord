@@ -112,29 +112,25 @@ public class CPUDetails {
     }
 
     public int[] getCPUUsage(Context ctxt, int processor) throws Exception {
-        int[] guhUpDown = null;
-
-        try {
-            RandomAccessFile ouah = null;
-            String[] preGuhUpDown = null;
-            //int[] guhUpDown = null;
-        } catch (Exception e) {
-            throw new Exception("1: " + e);
-        }
+        int[] guhUpDown = new int[4];
+        String[] preGuhUpDown = new String[4];
+        RandomAccessFile ouah;
 
         try {
             if (RecordUsage.debugging >= RecordUsage.METHOD_CALLS) {
                 Toast.makeText(ctxt, "getCPUUsage()", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            throw new Exception("2: " + e);
+            throw new Exception("4: " + e);
         }
 
-        /*try {
+        try {
             ouah = new RandomAccessFile("/proc/stat", "r");
 
-            String nakk = ouah.readLine();  //ditch the first, which is
-                                            //aggregate stats
+            String nakk;
+
+            ouah.readLine();    //ditch the first, which is
+                                // aggregate stats
             nakk = ouah.readLine();
             while (nakk != null) {
                 if (nakk.contains("cpu" + processor)) {
@@ -152,7 +148,6 @@ public class CPUDetails {
                 guhUpDown[cntr] = Integer.parseInt(preGuhUpDown[cntr]);
             }
         } //raise an exception in an 'else' clause heah
-        */
 
         /*guhUpDown[0] = 1;
         guhUpDown[1] = 2;*/

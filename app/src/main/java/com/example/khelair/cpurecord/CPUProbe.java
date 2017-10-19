@@ -8,6 +8,8 @@ import android.widget.Toast;
  */
 
 public class CPUProbe {
+    //constant(s)
+    public static final int MAX_COARS = 16;
     public static Context ctxt;
 
     //constructor(s)
@@ -25,18 +27,18 @@ public class CPUProbe {
     }
 
     public static void displayInfo() {
-        //int[][] cpuStats = null;
+        int[][] cpuStats = new int[MAX_COARS][4];
 
         CPUDetails wut = new CPUDetails(ctxt);
 
-        /*try {
+        try {
             for (int cntr = 0; cntr < wut.getCoars(); cntr++) {
                 cpuStats[cntr] = wut.getCPUUsage(ctxt, cntr);
             }
         } catch (Exception e) {
             Toast.makeText(ctxt, "1: " + e,
                     Toast.LENGTH_LONG).show();
-        }*/
+        }
 
         //god ouah
         if (RecordUsage.debugging >= RecordUsage.METHOD_CALLS) {
@@ -46,10 +48,9 @@ public class CPUProbe {
         try {
             if (RecordUsage.debugging >= RecordUsage.GENERAL) {
                 Toast.makeText(ctxt, "Coar siblings: " +
-                        wut.getCoars(), Toast.LENGTH_LONG).show();
-            Toast.makeText(ctxt, "Usage entries (core 0): " +
-                    wut.getCPUUsage(ctxt, 0).toString(),
-                    Toast.LENGTH_LONG).show();
+                        wut.getCoars(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctxt, "Usage entries (core 0): " +
+                        wut.getCPUUsage(ctxt, 0), Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Toast.makeText(ctxt, "2: " + e,

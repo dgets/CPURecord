@@ -12,7 +12,7 @@ public class RecordUsage extends AppCompatActivity {
     public static final int GENERAL = 1;
     public static final int METHOD_CALLS = 2;
 
-    public static final int debugging = METHOD_CALLS;
+    public static final int debugging = GENERAL;
     //public static final int readingDelay = 3000;    //between readings (ms)
 
     public Context appShit; // = this.getApplicationContext();
