@@ -8,8 +8,12 @@ import android.widget.Toast;
  */
 
 public class CPUProbe {
+    public static Context ctxt;
 
-    //Context appShit;
+    //constructor(s)
+    public CPUProbe(Context c) {
+        this.ctxt = c;
+    }
 
     public void gatherCPUInfo() {
         //determine coars
@@ -21,7 +25,14 @@ public class CPUProbe {
     }
 
     public static void displayInfo(Context aShit) {
-        Toast.makeText(aShit, "Coar siblings: " +
-            CPUDetails.getCoars(aShit), Toast.LENGTH_LONG);
+        CPUDetails wut = new CPUDetails(ctxt);
+
+        //god ouah
+        if (RecordUsage.debugging >= 2) {
+            Toast.makeText(aShit, "displayInfo()", Toast.LENGTH_SHORT).show();
+        } else if (RecordUsage.debugging >= 1) {
+            Toast.makeText(aShit, "Coar siblings: " +
+                    wut.getCoars(aShit), Toast.LENGTH_LONG).show();
+        }
     }
 }

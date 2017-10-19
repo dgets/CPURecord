@@ -14,7 +14,7 @@ public class CPUDetails {
     private String vendorId, modelName;
     private int cpuFamily, coreId;
     private float speedMhz;
-    Context ctxt;
+    public static Context ctxt;
 
     //constructor(s)
     public CPUDetails(Context c) {
@@ -73,7 +73,7 @@ public class CPUDetails {
     }
 
     //general methods
-    public static int getCoars(Context ctxt) {
+    public int getCoars(Context ctxt) {
         //I believe that an effective method to obtain this information will
         //be to check the 'siblings' line of the first CPU/core listed in
         // /proc/cpuinfo; best to check on that somewhere, though
@@ -81,23 +81,29 @@ public class CPUDetails {
         int guhUpDown = 0;
         RandomAccessFile ouah = null;
 
+        if (RecordUsage.debugging >= 2) {
+            Toast.makeText(ctxt, "getCoars()", Toast.LENGTH_SHORT).show();
+        }
+
         try {
             ouah = new RandomAccessFile("/proc/cpuinfo", "r");
             String nakk = ouah.readLine();
             while (nakk != null) {
-                if (nakk.contains("siblings")) {
-                    guhUpDown = Integer.parseInt(nakk.split(": ")[1]);
-                    break;
+                if (nakk.contains("processor")) {
+                    guhUpDown = (Integer.parseInt(nakk.split(": ")[1]) + 1);
                 }
+                nakk = ouah.readLine();
             }
             ouah.close();
         } catch (IOException ex) {
             //no idea why this isn't working the same way that it did in
             //MinTone :-?(beep)
-            /*Toast.makeText(getApplicationContext(), "Problem reading cpuinfo",
-                    Toast.LENGTH_SHORT).show();*/
             Toast.makeText(ctxt, "Problem reading cpuinfo",
                     Toast.LENGTH_SHORT).show();
+        }
+
+        if (RecordUsage.debugging >= 1) {
+            Toast.makeText(ctxt, "CPU Siblings: " + guhUpDown, Toast.LENGTH_LONG);
         }
 
         return guhUpDown;
