@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">CPU Record</string>
+    <string name="graph_window_title">CPU Activity</string>
+    <string name="manual_start_off">Start Recording</string>
+    <string name="manual_start_on">Stop Recording</string>
+</resources>
