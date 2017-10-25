@@ -5,11 +5,12 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-//import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
- * Created by khelair on 10/19/17.
+ * Created by Damon Getsman on 10/19/17
+ * This class is basically just for any of the CPU information that we can
+ * procure via /proc
  */
 
 public class CPUDetails {
@@ -133,18 +134,30 @@ public class CPUDetails {
                                 // aggregate stats
             nakk = ouah.readLine();
             while (nakk != null) {
+                /*if (nakk.contains("cpu")) {
+                    preGuhUpDown = Arrays.copyOfRange(nakk.split(" "), 3, 6);
+                    for (String fihkaff : preGuhUpDown) {
+                        Toast.makeText(ctxt, fihkaff, Toast.LENGTH_SHORT).show();
+                    }
+                }*/
+
                 if (nakk.contains("cpu" + processor)) {
-                    preGuhUpDown  = Arrays.copyOfRange(nakk.split(" "), 3, 6);
-                    ouah.close();
+                    //preGuhUpDown  = nakk.split(" ");
+                    preGuhUpDown = Arrays.copyOfRange(nakk.split(" "), 3, 6);
+
+                    //Toast.makeText(ctxt, nakk, Toast.LENGTH_SHORT).show();
                 }
+
+                nakk = ouah.readLine();
             }
+            ouah.close();
         } catch (IOException e) {
             Toast.makeText(ctxt, "Problem reading /proc/stat",
                     Toast.LENGTH_LONG);
         }
 
         if (preGuhUpDown != null) {
-            for (int cntr = 0; cntr <= preGuhUpDown.length; cntr++) {
+            for (int cntr = 0; cntr < preGuhUpDown.length; cntr++) {
                 guhUpDown[cntr] = Integer.parseInt(preGuhUpDown[cntr]);
             }
         } //raise an exception in an 'else' clause heah
