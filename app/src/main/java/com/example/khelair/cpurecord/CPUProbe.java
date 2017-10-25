@@ -25,14 +25,37 @@ public class CPUProbe {
 
     }
 
-    public void probeStats() {
+    public static int[][] probeStats() {
+        CPUDetails processor = new CPUDetails(ctxt);    //phase out ctxt
+        int[][] curProcStats = new int[MAX_COARS][5];
+        int coars = processor.getCoars();
+        int cntr = 0;
 
+        for (; cntr < coars; cntr++) {
+            try {
+                curProcStats[cntr] = processor.getCPUUsage(ctxt, cntr);
+            } catch (Exception e) {
+                Toast.makeText(ctxt, "Fucked: probeStats()",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            curProcStats[cntr][4] = curProcStats[cntr][0] +
+                    curProcStats[cntr][1] + curProcStats[cntr][2]
+                    + curProcStats[cntr][3];
+        }
+
+        return curProcStats;
     }
 
     public static void displayInfo() {
-        //welp, since this refuses to work, maybe a List will help...
         int[][] cpuStats = new int[MAX_COARS][4];
-        //List perCoarStats = new ArrayList<Integer>();
+        /*
+         * cpuStats[core #] array breaks down as follows:
+         * 1: idle
+         * 2: iowait
+         * 3: irq
+         * 4: softirq
+         */
 
         int coars = 0;
 
