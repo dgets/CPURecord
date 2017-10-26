@@ -34,7 +34,7 @@ public class CPUProbe {
     public static int[][] probeStats(Context ctxt) {
         CPUDetails processor = new CPUDetails(ctxt);    //phase out ctxt
         int[][] curProcStats = new int[MAX_COARS][5];
-        int coars = processor.getCoars(ctxt) - 1;
+        int coars = processor.getCoars(ctxt);
         int cntr = 0;
 
         for (; cntr < coars; cntr++) {
