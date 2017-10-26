@@ -91,15 +91,13 @@
         android:scrollbars="vertical"
         android:text="Not Populated Yet"
         android:textAlignment="textStart"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:typeface="monospace"
         app:layout_constraintBottom_toTopOf="@+id/tbtRecord"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sfvCPUGraph"
-        app:layout_constraintVertical_bias="0.465"
-        tools:layout_editor_absoluteY="231dp"
-        tools:layout_editor_absoluteX="-23dp"
-        app:layout_constraintHorizontal_bias="0.502" />
+        app:layout_constraintVertical_bias="0.465" />
 
 </android.support.constraint.ConstraintLayout>

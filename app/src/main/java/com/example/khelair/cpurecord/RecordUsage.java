@@ -5,12 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @author Damon Getsman
+ *
+ * Class handles the entry point and primary display of CPU statistics
+ */
 public class RecordUsage extends AppCompatActivity {
-
     //'constants'
     public static final int GENERAL = 1;
     public static final int METHOD_CALLS = 2;
@@ -18,7 +21,7 @@ public class RecordUsage extends AppCompatActivity {
     public static final int debugging = GENERAL;
     //public static final int debugging = METHOD_CALLS;
 
-    public Context appShit; // = this.getApplicationContext();
+    public Context appShit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +35,15 @@ public class RecordUsage extends AppCompatActivity {
 
     }
 
+    /**
+     * This class is being used in development because I still don't know how
+     * to work with unit testing, or the debugger, well enough to handle
+     * this stuff the right way.  :|
+     *
+     * @param view
+     */
     public void getDebugInfos(View view) {
         appShit = getApplicationContext();
-
 
         CPUProbe ouah = new CPUProbe(appShit);
 
@@ -46,9 +55,14 @@ public class RecordUsage extends AppCompatActivity {
         if (debugging >= GENERAL) {
             CPUProbe.displayInfo();
         }
-
     }
 
+    /**
+     * This class gathers statistics from CPUProbe & CPUDetails, then filling
+     * the TextBox with our information.
+     *
+     * @param view
+     */
     public void fillStatsListView(View view) {
         appShit = getApplicationContext();
 
@@ -67,10 +81,9 @@ public class RecordUsage extends AppCompatActivity {
         statsBox.setMovementMethod(new ScrollingMovementMethod());
         statsBox.setText("");
 
-        //why is this line causing a crash?
         deviceStats = CPUProbe.probeStats(appShit);
 
-        for (int cntr2 = 0; cntr2 < 3; cntr2++) {
+        for (int cntr2 = 0; cntr2 < 4; cntr2++) {
             idle = deviceStats[cntr2][0]; iowait = deviceStats[cntr2][1];
             irq = deviceStats[cntr2][2]; softirq = deviceStats[cntr2][3];
 
@@ -80,7 +93,7 @@ public class RecordUsage extends AppCompatActivity {
                 irq = statline[2];
                 softirq = statline[3];*/
 
-                total = (idle + iowait + irq + softirq) / 100;  //percentage work
+                total = (idle + iowait + irq + softirq) / 100;
                 if (debugging >= GENERAL) {
                     Toast.makeText(appShit, "total: " + total +
                             "\nidle: " + idle + "\niowait: " + iowait +
@@ -90,11 +103,14 @@ public class RecordUsage extends AppCompatActivity {
 
                 try {
                     statsBox.append("\nCore: " + cntr2 + "\n\tIdle: " +
-                            ((float)idle / total) + "%\tIO Wait: " + ((float)iowait / total));
-                    statsBox.append("%\n\tIRQ: " + ((float)irq / total) + "%\tSoft IRQ: " +
-                            ((float)softirq / total) + "%\n\n");
+                            ((float)idle / total) + "%\t\t\tIO Wait: " +
+                            ((float)iowait / total));
+                    statsBox.append("%\n\tIRQ: " + ((float)irq / total) +
+                            "%\t\t\tSoft IRQ: " + ((float)softirq / total) +
+                            "%\n\n");
                 } catch (Exception e) {
-                    Toast.makeText(appShit, "cntr: " + cntr2 + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(appShit, "cntr: " + cntr2 + ": " +
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             //}
         }

@@ -12,7 +12,6 @@ import java.util.Arrays;
  * This class is basically just for any of the CPU information that we can
  * procure via /proc
  */
-
 public class CPUDetails {
     private String vendorId, modelName;
     private int cpuFamily, coreId;
@@ -76,6 +75,13 @@ public class CPUDetails {
     }
 
     //general methods
+
+    /**
+     * Method probes for the number of cores on this device.
+     *
+     * @param ctxt
+     * @return int - number of cores found
+     */
     public int getCoars(Context ctxt) {
         //I believe that an effective method to obtain this information will
         //be to check the 'siblings' line of the first CPU/core listed in
@@ -94,7 +100,8 @@ public class CPUDetails {
             String nakk = ouah.readLine();
             while (nakk != null) {
                 if (nakk.contains("processor")) {
-                    guhUpDown = (Integer.parseInt(nakk.split(": ")[1]) + 1);
+                    guhUpDown =
+                            (Integer.parseInt(nakk.split(": ")[1]) + 1);
                 }
                 nakk = ouah.readLine();
             }
@@ -112,6 +119,15 @@ public class CPUDetails {
         return guhUpDown;
     }
 
+    /**
+     * This method returns an array of 4 integers for the different
+     * processor modes' time spent.
+     *
+     * @param ctxt
+     * @param processor - id of the core to probe
+     * @return int[] - array of tiem spent in each mode
+     * @throws Exception
+     */
     public int[] getCPUUsage(Context ctxt, int processor) throws Exception {
         int[] guhUpDown = new int[4];
         String[] preGuhUpDown = new String[4];
@@ -119,7 +135,8 @@ public class CPUDetails {
 
         try {
             if (RecordUsage.debugging >= RecordUsage.METHOD_CALLS) {
-                Toast.makeText(ctxt, "getCPUUsage()", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctxt, "getCPUUsage()",
+                        Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             throw new Exception("4: " + e);
@@ -131,25 +148,17 @@ public class CPUDetails {
             String nakk;
 
             ouah.readLine();    //ditch the first, which is
-                                // aggregate stats
+                                // aggregate stats (for now, anyway)
             nakk = ouah.readLine();
             while (nakk != null) {
-                /*if (nakk.contains("cpu")) {
-                    preGuhUpDown = Arrays.copyOfRange(nakk.split(" "), 3, 6);
-                    for (String fihkaff : preGuhUpDown) {
-                        Toast.makeText(ctxt, fihkaff, Toast.LENGTH_SHORT).show();
-                    }
-                }*/
-
                 if (nakk.contains("cpu" + processor)) {
-                    //preGuhUpDown  = nakk.split(" ");
                     try {
-                        preGuhUpDown = Arrays.copyOfRange(nakk.split(" "), 3, 6);
+                        preGuhUpDown = Arrays.copyOfRange(
+                                nakk.split(" "), 3, 6);
                     } catch (Exception e) {
                         Toast.makeText(ctxt, "fucked!!",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_LONG).show();
                     }
-                    //Toast.makeText(ctxt, nakk, Toast.LENGTH_SHORT).show();
                 }
 
                 nakk = ouah.readLine();
@@ -165,13 +174,12 @@ public class CPUDetails {
                 try {
                     guhUpDown[cntr] = Integer.parseInt(preGuhUpDown[cntr]);
                 } catch (Exception e) {
-                    Toast.makeText(ctxt, "WTF-f-f", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctxt, "WTF-f-f",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         } //raise an exception in an 'else' clause heah
 
-        /*guhUpDown[0] = 1;
-        guhUpDown[1] = 2;*/
         return guhUpDown;
     }
 }
