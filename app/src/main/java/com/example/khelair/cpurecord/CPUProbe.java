@@ -25,13 +25,16 @@ public class CPUProbe {
 
     }
 
-    public static int[][] probeStats() {
+    public static int[][] probeStats(Context ctxt) {
+        //crashing probably
         CPUDetails processor = new CPUDetails(ctxt);    //phase out ctxt
         int[][] curProcStats = new int[MAX_COARS][5];
-        int coars = processor.getCoars();
+        int coars = processor.getCoars(ctxt) - 1;
         int cntr = 0;
 
         for (; cntr < coars; cntr++) {
+
+            //this try/catch is crashing,
             try {
                 curProcStats[cntr] = processor.getCPUUsage(ctxt, cntr);
             } catch (Exception e) {
@@ -39,9 +42,9 @@ public class CPUProbe {
                         Toast.LENGTH_SHORT).show();
             }
 
-            curProcStats[cntr][4] = curProcStats[cntr][0] +
+            /*curProcStats[cntr][4] = curProcStats[cntr][0] +
                     curProcStats[cntr][1] + curProcStats[cntr][2]
-                    + curProcStats[cntr][3];
+                    + curProcStats[cntr][3];*/
         }
 
         return curProcStats;
@@ -62,7 +65,7 @@ public class CPUProbe {
         CPUDetails wut = new CPUDetails(ctxt);
 
         try {
-            coars = wut.getCoars();
+            coars = wut.getCoars(ctxt);
             for (int cntr = 0; cntr < coars; cntr++) {
                 //Toast.makeText(ctxt, "Coar: " + cntr, Toast.LENGTH_SHORT).show();
                 cpuStats[cntr] = wut.getCPUUsage(ctxt, cntr);

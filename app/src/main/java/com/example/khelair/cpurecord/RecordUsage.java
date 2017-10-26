@@ -3,6 +3,7 @@ package com.example.khelair.cpurecord;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,26 +50,53 @@ public class RecordUsage extends AppCompatActivity {
     }
 
     public void fillStatsListView(View view) {
-        //ListView statsView = (ListView) findViewById(R.id.lvwStats);
+        appShit = getApplicationContext();
+
         TextView statsBox = (TextView) findViewById(R.id.txtStats);
 
-        int[][] deviceStats = new int[CPUProbe.MAX_COARS][4];
+        int[][] deviceStats = new int[CPUProbe.MAX_COARS][5];
 
         int total, idle, iowait, irq, softirq;
         int cntr = 0;
 
-        deviceStats = CPUProbe.probeStats();
+        if (debugging >= METHOD_CALLS) {
+            Toast.makeText(appShit, "fillStatsListView()",
+                    Toast.LENGTH_SHORT).show();
+        }
 
-        for (int[] statline : deviceStats) {
-            idle = statline[0]; iowait = statline[1];
-            irq = statline[2]; softirq = statline[3];
+        statsBox.setMovementMethod(new ScrollingMovementMethod());
+        statsBox.setText("");
 
-            total = idle + iowait + irq + softirq;
+        //why is this line causing a crash?
+        deviceStats = CPUProbe.probeStats(appShit);
 
-            statsBox.append("\nCore: " + cntr++ + "\tIdle: " +
-                    (idle / total) + "%\tIO Wait: " + (iowait / total) +
-                    "%\tIRQ: " + (irq / total) + "%\tSoft IRQ: " +
-                    (softirq / total) + "%");
+        for (int cntr2 = 0; cntr2 < 3; cntr2++) {
+            idle = deviceStats[cntr2][0]; iowait = deviceStats[cntr2][1];
+            irq = deviceStats[cntr2][2]; softirq = deviceStats[cntr2][3];
+
+            /*for (int statline : deviceStats[cntr2]) {
+                idle = statline[0];
+                iowait = statline[1];
+                irq = statline[2];
+                softirq = statline[3];*/
+
+                total = (idle + iowait + irq + softirq) / 100;  //percentage work
+                if (debugging >= GENERAL) {
+                    Toast.makeText(appShit, "total: " + total +
+                            "\nidle: " + idle + "\niowait: " + iowait +
+                            "\nirq: " + irq + "\nsoftirq: " + softirq,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                try {
+                    statsBox.append("\nCore: " + cntr2 + "\n\tIdle: " +
+                            ((float)idle / total) + "%\tIO Wait: " + ((float)iowait / total));
+                    statsBox.append("%\n\tIRQ: " + ((float)irq / total) + "%\tSoft IRQ: " +
+                            ((float)softirq / total) + "%\n\n");
+                } catch (Exception e) {
+                    Toast.makeText(appShit, "cntr: " + cntr2 + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            //}
         }
     }
 

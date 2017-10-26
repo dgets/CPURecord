@@ -76,7 +76,7 @@ public class CPUDetails {
     }
 
     //general methods
-    public int getCoars() {
+    public int getCoars(Context ctxt) {
         //I believe that an effective method to obtain this information will
         //be to check the 'siblings' line of the first CPU/core listed in
         // /proc/cpuinfo; best to check on that somewhere, though
@@ -143,8 +143,12 @@ public class CPUDetails {
 
                 if (nakk.contains("cpu" + processor)) {
                     //preGuhUpDown  = nakk.split(" ");
-                    preGuhUpDown = Arrays.copyOfRange(nakk.split(" "), 3, 6);
-
+                    try {
+                        preGuhUpDown = Arrays.copyOfRange(nakk.split(" "), 3, 6);
+                    } catch (Exception e) {
+                        Toast.makeText(ctxt, "fucked!!",
+                                Toast.LENGTH_SHORT).show();
+                    }
                     //Toast.makeText(ctxt, nakk, Toast.LENGTH_SHORT).show();
                 }
 
@@ -158,7 +162,11 @@ public class CPUDetails {
 
         if (preGuhUpDown != null) {
             for (int cntr = 0; cntr < preGuhUpDown.length; cntr++) {
-                guhUpDown[cntr] = Integer.parseInt(preGuhUpDown[cntr]);
+                try {
+                    guhUpDown[cntr] = Integer.parseInt(preGuhUpDown[cntr]);
+                } catch (Exception e) {
+                    Toast.makeText(ctxt, "WTF-f-f", Toast.LENGTH_SHORT).show();
+                }
             }
         } //raise an exception in an 'else' clause heah
 
