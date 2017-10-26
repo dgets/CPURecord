@@ -55,6 +55,31 @@ public class CPUProbe {
     }
 
     /**
+     * Method provides a simple way to handle tabulation and rounding of the
+     * statistics from each core
+     *
+     * @param times - array of 4 core time values
+     * @return float - array of 4 time percentages (rounded to 2d)
+     */
+    public static float[] tabNRoundStats(int[] times) {
+        int total = 0;
+        float[] pct = new float[4];
+        float tmp;
+
+        for (int ouah : times) {
+            total += ouah;
+        }
+
+        for (int cntr = 0; cntr < 4; cntr++) {
+            //handles the rounding & percentage calculation
+            tmp = ((float)times[cntr] / total);
+            pct[cntr] = Math.round(tmp * 100);
+        }
+
+        return pct;
+    }
+
+    /**
      * This method was used primarily during debugging of CPUProbe &
      * CPUDetails...  Again, due to the fact that I've not yet learned
      * enough regarding unit testing or using the debugger efficiently.

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+
 /**
  * @author Damon Getsman
  *
@@ -70,9 +72,6 @@ public class RecordUsage extends AppCompatActivity {
 
         int[][] deviceStats = new int[CPUProbe.MAX_COARS][5];
 
-        int total, idle, iowait, irq, softirq;
-        int cntr = 0;
-
         if (debugging >= METHOD_CALLS) {
             Toast.makeText(appShit, "fillStatsListView()",
                     Toast.LENGTH_SHORT).show();
@@ -83,36 +82,15 @@ public class RecordUsage extends AppCompatActivity {
 
         deviceStats = CPUProbe.probeStats(appShit);
 
-        for (int cntr2 = 0; cntr2 < 4; cntr2++) {
-            idle = deviceStats[cntr2][0]; iowait = deviceStats[cntr2][1];
-            irq = deviceStats[cntr2][2]; softirq = deviceStats[cntr2][3];
+        for (int cntr = 0; cntr < 4; cntr++) {
+                float[] percentages = null;
+                percentages = CPUProbe.tabNRoundStats(deviceStats[cntr]);
 
-            /*for (int statline : deviceStats[cntr2]) {
-                idle = statline[0];
-                iowait = statline[1];
-                irq = statline[2];
-                softirq = statline[3];*/
-
-                total = (idle + iowait + irq + softirq) / 100;
-                if (debugging >= GENERAL) {
-                    Toast.makeText(appShit, "total: " + total +
-                            "\nidle: " + idle + "\niowait: " + iowait +
-                            "\nirq: " + irq + "\nsoftirq: " + softirq,
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                try {
-                    statsBox.append("\nCore: " + cntr2 + "\n\tIdle: " +
-                            ((float)idle / total) + "%\t\t\tIO Wait: " +
-                            ((float)iowait / total));
-                    statsBox.append("%\n\tIRQ: " + ((float)irq / total) +
-                            "%\t\t\tSoft IRQ: " + ((float)softirq / total) +
-                            "%\n\n");
-                } catch (Exception e) {
-                    Toast.makeText(appShit, "cntr: " + cntr2 + ": " +
-                            e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            //}
+                statsBox.append("\nCore: " + cntr + "\n");
+                statsBox.append("Idle: \t\t" + percentages[0] + "%\t\t");
+                statsBox.append("IO Wait:\t" + percentages[1] + "%\n");
+                statsBox.append("IRQ:\t\t" + percentages[2] + "%\t\t");
+                statsBox.append("Soft IRQ:\t" + percentages[3] + "%\n");
         }
     }
 
