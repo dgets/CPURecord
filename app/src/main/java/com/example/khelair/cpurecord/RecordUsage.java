@@ -1,14 +1,16 @@
 package com.example.khelair.cpurecord;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.lang.reflect.Array;
 
 /**
  * @author Damon Getsman
@@ -31,10 +33,40 @@ public class RecordUsage extends AppCompatActivity {
         setContentView(R.layout.activity_record_usage);
 
         appShit = getApplicationContext();
+        //SurfaceView board = (SurfaceView) findViewById(R.id.sfvCPUGraph);
+
+        drawBoundary(/*board*/);
+        //setContentView(R.layout.activity_record_usage);
     }
 
     public void onManualRecordClick(View view) {
 
+    }
+
+    /**
+     * This method is to purdify the SurfaceView, as well as to provide
+     * a good place for me to learn to use it.  This method, and its friends
+     * to come, may well end up in a separate class at some point soon.
+     */
+    public void drawBoundary() {
+        SurfaceView drawHeah = (SurfaceView) findViewById(R.id.sfvCPUGraph);
+        Canvas canvas = new Canvas();
+
+        Paint borderPaint = new Paint();
+
+        int maxX, maxY;
+
+        maxY = drawHeah.getHeight(); maxX = drawHeah.getWidth();
+
+        borderPaint.setColor(Color.YELLOW);
+        drawHeah.setBackgroundColor(Color.BLUE);
+
+        canvas.drawLine(1, 1, maxX - 1, 1, borderPaint);
+        canvas.drawLine(maxX - 1, 1, maxX - 1, maxY - 1, borderPaint);
+        canvas.drawLine(maxX - 1, maxY - 1, 1, maxY - 1, borderPaint);
+        canvas.drawLine(1, maxY - 1, 1, 1, borderPaint);
+
+        drawHeah.draw(canvas);
     }
 
     /**
