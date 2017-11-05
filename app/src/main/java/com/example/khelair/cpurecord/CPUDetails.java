@@ -13,8 +13,7 @@ import java.util.Arrays;
  * procure via /proc
  */
 public class CPUDetails {
-    private String vendorId, modelName;
-    private int cpuFamily; //, coreId;
+    private String vendorId, modelName, cpuFamily;
     //private float speedMhz;
     public static Context ctxt; //GET RID OF THIS
 
@@ -23,13 +22,13 @@ public class CPUDetails {
         this.ctxt = c;
     }
 
-    public CPUDetails(Context c, String vid, String mn, int cf, int ci,
-                      float spd) {
-        this.vendorId = vid;
-        this.modelName = mn;
-        this.cpuFamily = cf;
-        /*this.coreId = ci;
-        this.speedMhz = spd;*/
+    public CPUDetails() throws Exception {
+        try {
+            this.getMisc();
+        } catch (Exception ex) {
+            throw new Exception(
+                    "CPUDetails.getMisc() issue: " + ex.getMessage());
+        }
     }
 
     //getters/setters (ouah)
@@ -43,7 +42,7 @@ public class CPUDetails {
         return modelName;
     }
 
-    public int getCpuFamily() {
+    public String getCpuFamily() {
         return cpuFamily;
     }
 
@@ -70,35 +69,44 @@ public class CPUDetails {
      */
     public void getMisc() throws Exception {
         RandomAccessFile ouah = null;
-        //String gnah = null;
 
-        try {   //oh ffs, narrow this down to the individual exception prone
-                //statements :|
+        try {
             ouah = new RandomAccessFile("/proc/cpuinfo", "r");
+        } catch (Exception ex) {
+            throw new Exception("opening cpuinfo: " + ex.getMessage());
+        }
 
-            //String gnah, godOuah[];
-            String nang = ouah.readLine();
+        //String gnah, godOuah[];
+        String nang = ouah.readLine();
 
-            while (nang != null) {
-                if (nang.contains("Processor")) {
-                    String gnah = nang.split(": ")[1];
-                    String godOuah[] = gnah.split(" ");
+        while (nang != null) {
+            if (nang.contains("Processor")) {
+                String gnah = nang.split(": ")[1];
+                String godOuah[] = gnah.split(" ");
 
-                    vendorId = godOuah[0];
-                    modelName = godOuah[0] + " " + godOuah[1] + " " +
-                            godOuah[2] + " " + godOuah[3];
-                    //cpuFamily = String.copyValueOf(godOuah[4].toCharArray(),
-                      //      1, (godOuah[4].length() - 2));
-                    cpuFamily =
-                            Integer.parseInt(
-                                    godOuah[3].subSequence(1,
-                                            (godOuah[3].length() - 1)).toString());
+                vendorId = godOuah[0];
+                modelName = godOuah[0] + " " + godOuah[1] + " " +
+                        godOuah[2] + " " + godOuah[3];
 
+                try {
+                    cpuFamily = godOuah[4].subSequence(1,
+                            (godOuah[4].length() - 1)).toString();
+                } catch (Exception ex) {
+                    throw new Exception("cpuFamily setting: " + ex.getMessage());
                 }
             }
-        } catch (Exception ex) {
-            throw new Exception("CPUDetails.getMisc(): " + ex.getMessage());
+            nang = ouah.readLine();
         }
+
+        ouah.close();
+    }
+
+    /**
+     * Method displays the schitt that we don't need to format nicely
+     */
+    public String toString() {
+        return "CPU Misc\n-=-=-=-=-\nVendor ID:\t" + vendorId +
+        "\t\tModel:\t" + modelName + "\t\tFamily:\t" + cpuFamily + "\n\n";
     }
 
     /**

@@ -159,6 +159,18 @@ public class RecordUsage extends AppCompatActivity {
             statsBox.append("Soft IRQ:\t" + Float.toString(percentages[3])
                     + "%\n");
         }
+
+        CPUDetails ouahouah = null;
+
+        //cheggout the misc stats
+        try {
+            ouahouah = new CPUDetails();
+        } catch (Exception ex) {
+            Toast.makeText(appShit, "ouah: " + ex.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        statsBox.append("\n\n" + ouahouah);
     }
 
 }
