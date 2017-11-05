@@ -14,9 +14,9 @@ import java.util.Arrays;
  */
 public class CPUDetails {
     private String vendorId, modelName;
-    private int cpuFamily, coreId;
-    private float speedMhz;
-    public static Context ctxt;
+    private int cpuFamily; //, coreId;
+    //private float speedMhz;
+    public static Context ctxt; //GET RID OF THIS
 
     //constructor(s)
     public CPUDetails(Context c) {
@@ -28,37 +28,26 @@ public class CPUDetails {
         this.vendorId = vid;
         this.modelName = mn;
         this.cpuFamily = cf;
-        this.coreId = ci;
-        this.speedMhz = spd;
-        this.ctxt = c;
+        /*this.coreId = ci;
+        this.speedMhz = spd;*/
     }
 
     //getters/setters (ouah)
+    //of course these ones don't have 'setters', as everything is handled in
+    //getMisc() for these values
     public String getVendorId() {
         return vendorId;
-    }
-
-    public void setVendorId(String vid) {
-        this.vendorId = vid;
     }
 
     public String getModelName() {
         return modelName;
     }
 
-    public void setModelName(String mName) {
-        this.modelName = mName;
-    }
-
     public int getCpuFamily() {
         return cpuFamily;
     }
 
-    public void setCpuFamily(int cfam) {
-        this.cpuFamily = cfam;
-    }
-
-    public int getCoreId() {
+    /*public int getCoreId() {
         return coreId;
     }
 
@@ -72,9 +61,45 @@ public class CPUDetails {
 
     public void setSpeedMhz(float speed) {
         this.speedMhz = speed;
-    }
+    }*/
 
     //general methods
+    /**
+     * Method probes cpuinfo for various details about the hardware
+     *
+     */
+    public void getMisc() throws Exception {
+        RandomAccessFile ouah = null;
+        //String gnah = null;
+
+        try {   //oh ffs, narrow this down to the individual exception prone
+                //statements :|
+            ouah = new RandomAccessFile("/proc/cpuinfo", "r");
+
+            //String gnah, godOuah[];
+            String nang = ouah.readLine();
+
+            while (nang != null) {
+                if (nang.contains("Processor")) {
+                    String gnah = nang.split(": ")[1];
+                    String godOuah[] = gnah.split(" ");
+
+                    vendorId = godOuah[0];
+                    modelName = godOuah[0] + " " + godOuah[1] + " " +
+                            godOuah[2] + " " + godOuah[3];
+                    //cpuFamily = String.copyValueOf(godOuah[4].toCharArray(),
+                      //      1, (godOuah[4].length() - 2));
+                    cpuFamily =
+                            Integer.parseInt(
+                                    godOuah[3].subSequence(1,
+                                            (godOuah[3].length() - 1)).toString());
+
+                }
+            }
+        } catch (Exception ex) {
+            throw new Exception("CPUDetails.getMisc(): " + ex.getMessage());
+        }
+    }
 
     /**
      * Method probes for the number of cores on this device.
@@ -125,7 +150,7 @@ public class CPUDetails {
      *
      * @param ctxt
      * @param processor - id of the core to probe
-     * @return int[] - array of tiem spent in each mode
+     * @return float[] - array of tiem spent in each mode
      * @throws Exception
      */
     public int[] getCPUUsage(Context ctxt, int processor) throws Exception {

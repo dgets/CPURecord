@@ -31,24 +31,26 @@ public class CPUProbe {
      * @param ctxt
      * @return int[][] - array of 4 processor states for each core
      */
-    public static int[][] probeStats(Context ctxt) {
+    public static int[][] probeStats(Context ctxt) throws Exception {
         CPUDetails processor = new CPUDetails(ctxt);    //phase out ctxt
         int[][] curProcStats = new int[MAX_COARS][5];
         int coars = processor.getCoars(ctxt);
         int cntr = 0;
 
-        for (; cntr < coars; cntr++) {
+        for (; cntr < MAX_COARS; cntr++) {
 
-            try {
-                curProcStats[cntr] = processor.getCPUUsage(ctxt, cntr);
-            } catch (Exception e) {
-                Toast.makeText(ctxt, "Fucked: probeStats()",
-                        Toast.LENGTH_SHORT).show();
+            if (cntr < coars) {
+                try {
+                    curProcStats[cntr] = processor.getCPUUsage(ctxt, cntr);
+                } catch (Exception e) {
+                    throw new Exception("CPUProbe.probeStats(): " + e);
+                    /*Toast.makeText(ctxt, "Fucked: probeStats()",
+                        Toast.LENGTH_SHORT).show();*/
+                }
+            } else {
+                curProcStats[cntr][0] = 0; curProcStats[cntr][1] = 0;
+                curProcStats[cntr][2] = 0; curProcStats[cntr][3] = 0;
             }
-
-            /*curProcStats[cntr][4] = curProcStats[cntr][0] +
-                    curProcStats[cntr][1] + curProcStats[cntr][2]
-                    + curProcStats[cntr][3];*/
         }
 
         return curProcStats;

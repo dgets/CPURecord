@@ -27,6 +27,8 @@ public class RecordUsage extends AppCompatActivity {
 
     public Context appShit;
 
+    public boolean recording = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +37,28 @@ public class RecordUsage extends AppCompatActivity {
         appShit = getApplicationContext();
         //SurfaceView board = (SurfaceView) findViewById(R.id.sfvCPUGraph);
 
-        drawBoundary(/*board*/);
+        //drawBoundary(/*board*/);
         //setContentView(R.layout.activity_record_usage);
     }
 
+    /**
+     * Method is to append each usage cycle's data collected to
+     * an internal log file; graphing can take place from these
+     * stats later on.
+     */
     public void onManualRecordClick(View view) {
+        CPURunStats statsLog[] = null;
+        int cntr = 0;
 
+        if (recording == false) {
+            //start recording, por dios
+
+        } else {
+            //stop and write it
+
+        }
+
+        recording = !recording;
     }
 
     /**
@@ -102,7 +120,7 @@ public class RecordUsage extends AppCompatActivity {
 
         TextView statsBox = (TextView) findViewById(R.id.txtStats);
 
-        int[][] deviceStats = new int[CPUProbe.MAX_COARS][5];
+        int[][] deviceStats = new int[CPUProbe.MAX_COARS][4]; //5=stats+total
 
         if (debugging >= METHOD_CALLS) {
             Toast.makeText(appShit, "fillStatsListView()",
@@ -112,17 +130,34 @@ public class RecordUsage extends AppCompatActivity {
         statsBox.setMovementMethod(new ScrollingMovementMethod());
         statsBox.setText("");
 
-        deviceStats = CPUProbe.probeStats(appShit);
+        try {
+            deviceStats = CPUProbe.probeStats(appShit);
+        } catch (Exception ex) {
+            Toast.makeText(appShit, "RecordUsage.fillStatsListView(): " +
+                ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
+        int total = 0;
         for (int cntr = 0; cntr < 4; cntr++) {
-                float[] percentages = null;
-                percentages = CPUProbe.tabNRoundStats(deviceStats[cntr]);
+            float[] percentages = new float[4];
 
-                statsBox.append("\nCore: " + cntr + "\n");
-                statsBox.append("Idle: \t\t" + percentages[0] + "%\t\t");
-                statsBox.append("IO Wait:\t" + percentages[1] + "%\n");
-                statsBox.append("IRQ:\t\t" + percentages[2] + "%\t\t");
-                statsBox.append("Soft IRQ:\t" + percentages[3] + "%\n");
+            for (int cur = 0; cur < deviceStats[0].length; cur++) {
+                total += deviceStats[cur][cntr];
+            }
+            for (int cur = 0; cur < deviceStats[0].length; cur++) {
+                percentages[cur] =
+                        (float) ((deviceStats[cur][cntr] * 100) / total);
+            }
+
+            statsBox.append("\nCore: " + cntr + "\n");
+            statsBox.append("Idle: \t\t" + Float.toString(percentages[0])
+                    + "%\t\t");
+            statsBox.append("IO Wait:\t" + Float.toString(percentages[1])
+                    + "%\n");
+            statsBox.append("IRQ:\t\t" + Float.toString(percentages[2])
+                    + "%\t\t");
+            statsBox.append("Soft IRQ:\t" + Float.toString(percentages[3])
+                    + "%\n");
         }
     }
 
