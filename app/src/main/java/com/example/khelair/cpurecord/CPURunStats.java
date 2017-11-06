@@ -13,8 +13,6 @@ import static com.example.khelair.cpurecord.CPUProbe.MAX_COARS;
 
 public class CPURunStats {
     //general per-cycle CPU stats
-    /*private float cpuTime = { "idle" => null, "iowait" => null, "irq" => null,
-            "softirq" => null);*/
     private Map<String, Integer>[] cpuTime = new HashMap[MAX_COARS];
     private static final String[] sliceTypes =
             { "idle", "iowait", "irq", "softirq" };
@@ -50,7 +48,6 @@ public class CPURunStats {
         if (coar >= MAX_COARS) {
             throw new Exception("Coar out of range");
         }
-
         for (String stype : sliceTypes) {
             total += cpuTime[coar].get(stype);
         }
@@ -59,7 +56,7 @@ public class CPURunStats {
     }
 
     /**
-     * Method is a slice type total getter (coars values totalled)
+     * Method is a slice type total getter (coars' specific value totalled)
      */
     public int getSliceTotal(String stype) throws Exception {
         int total = 0;  int curCoar = 0;
@@ -67,16 +64,7 @@ public class CPURunStats {
         do {
             total += cpuTime[curCoar++].get(stype);
         } while (cpuTime[curCoar].get("idle") != 0);
-        //there is certainly a much better way to determine coars;
-        //surgery recovery is my excuse today
 
         return total;
     }
-
-    /**
-     * Method is a slice type total getter, only for the one coar
-     */
-    /*public int getSliceTotal(String stype, int coar) throws Exception {
-        return (int) cpuTime[coar].get(stype);
-    }*/
 }

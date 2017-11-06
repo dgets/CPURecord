@@ -12,6 +12,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Damon Getsman
  *
@@ -21,24 +28,29 @@ public class RecordUsage extends AppCompatActivity {
     //'constants'
     public static final int GENERAL = 1;
     public static final int METHOD_CALLS = 2;
+    public static final int TICK_TOCK = 3;
 
-    public static final int debugging = GENERAL;
+    //public static final int debugging = GENERAL;
     //public static final int debugging = METHOD_CALLS;
+    public static final int debugging = TICK_TOCK;
 
-    public Context appShit;
+    private Context appShit;
 
-    public boolean recording = false;
+    private boolean recording = false;
+    private List<CPURunStats> cpuTickTock;
+    private ScheduledExecutorService ses =
+            Executors.newSingleThreadScheduledExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*final ScheduledExecutorService ses =
+                Executors.newSingleThreadScheduledExecutor(); */
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_usage);
 
         appShit = getApplicationContext();
-        //SurfaceView board = (SurfaceView) findViewById(R.id.sfvCPUGraph);
 
-        //drawBoundary(/*board*/);
-        //setContentView(R.layout.activity_record_usage);
     }
 
     /**
@@ -47,17 +59,50 @@ public class RecordUsage extends AppCompatActivity {
      * stats later on.
      */
     public void onManualRecordClick(View view) {
-        CPURunStats statsLog[] = null;
-        int cntr = 0;
+        //CPURunStats statsLog[] = null;
+        //int cntr = 0;
+        ScheduledFuture wutsGoinOnHeah = null;
 
-        if (recording == false) {
-            //start recording, por dios
+        if (!recording) {
+            //start recording, por dios; we need to find a different way to
+            //handle the following object; this is going to crash on each
+            //invocation after the first, isn't it?
+            if (debugging >= METHOD_CALLS) {
+                Toast.makeText(appShit, "setting ses.scheduleAtFixedRate()",
+                        Toast.LENGTH_SHORT).show();
+            }
+            wutsGoinOnHeah = ses.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    TextView debugBox = (TextView) findViewById(R.id.txtStats);
+                    Context gnah = getApplicationContext();
 
+                    try {
+                        cpuTickTock.add(new CPURunStats());
+                        Toast.makeText(gnah, "god ouah, man",
+                                Toast.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(gnah, "via onManualRecordClick(): " +
+                            ex.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    if (debugging >= TICK_TOCK) {
+                        debugBox.append("Debugging:");
+                        debugBox.append("\n" + cpuTickTock.toString());
+                    }
+                }
+            }, 0, 2, TimeUnit.SECONDS);
+
+            //debugBox.append("WtF-f-f-f-f-f");
+            //Toast.makeText(appShit, "wtF-f-f", Toast.LENGTH_SHORT).show();
         } else {
             //stop and write it
-
+            ses.shutdown();
         }
 
+        /*if (debugging >= TICK_TOCK) {
+            Toast.makeText(appShit, wutsGoinOnHeah.toString(),
+                    Toast.LENGTH_LONG).show();
+        }*/
         recording = !recording;
     }
 
