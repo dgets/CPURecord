@@ -8,7 +8,10 @@ import java.util.Map;
 import static com.example.khelair.cpurecord.CPUProbe.MAX_COARS;
 
 /**
- * Created by Damon Getsman on 11/2/17.
+ * Class is for things related to the running statistics per coar
+ *
+ * @author Damon Getsman
+ * @since 2017-11-02
  */
 
 public class CPURunStats {
@@ -38,6 +41,8 @@ public class CPURunStats {
     }
 
     /**
+     * Method returns the number of cycle slices counted for the specified
+     * core.
      *
      * @param coar
      * @return
@@ -56,7 +61,9 @@ public class CPURunStats {
     }
 
     /**
-     * Method is a slice type total getter (coars' specific value totalled)
+     * Method is a slice type total getter (coars' specific value totalled);
+     * not sure exactly what the difference with this method is from above
+     * just yet.
      */
     public int getSliceTotal(String stype) throws Exception {
         int total = 0;  int curCoar = 0;

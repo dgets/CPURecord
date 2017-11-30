@@ -20,9 +20,17 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Damon Getsman
+ * Class handles the entry point and primary display of CPU statistics.
+ * Just an idea that I had after a few months of noticing every time that I'd
+ * turn my phone's display back on, the CPU would be pegged. I'm not sure,
+ * but I think that it might be indicative of some malware, and I want to
+ * collect some other statistics regarding what is going on when the display
+ * is inactive.
  *
- * Class handles the entry point and primary display of CPU statistics
+ * @author Damon Getsman
+ * @version 0.1a
+ * @since 2017-10-18
+ *
  */
 public class RecordUsage extends AppCompatActivity {
     //'constants'
@@ -34,8 +42,10 @@ public class RecordUsage extends AppCompatActivity {
     //public static final int debugging = METHOD_CALLS;
     public static final int debugging = TICK_TOCK;
 
+    //really need to try to get rid of this
     private Context appShit;
 
+    //these absolutely do need to be abolished and transferred around properly
     private boolean recording = false;
     private List<CPURunStats> cpuTickTock;
     private ScheduledExecutorService ses =
@@ -57,6 +67,8 @@ public class RecordUsage extends AppCompatActivity {
      * Method is to append each usage cycle's data collected to
      * an internal log file; graphing can take place from these
      * stats later on.
+     *
+     * @param view
      */
     public void onManualRecordClick(View view) {
         //CPURunStats statsLog[] = null;

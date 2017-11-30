@@ -4,11 +4,12 @@ import android.content.Context;
 import android.widget.Toast;
 
 /**
- * Created by Damon Getsman on 10/19/17.
- *
  * This class is used for initiating probes into the kernel's CPU hardware
  * entries in /proc.  It utilizes the methods of CPUDetails for this.
  * CPUDetails will later be made a subclass of CPUProbe.
+ *
+ * @author Damon Getsman
+ * @since 2017-10-19
  */
 public class CPUProbe {
     //constant(s)
@@ -82,7 +83,7 @@ public class CPUProbe {
     }
 
     /**
-     * This method was used primarily during debugging of CPUProbe &
+     * This method is used primarily during debugging of CPUProbe &
      * CPUDetails...  Again, due to the fact that I've not yet learned
      * enough regarding unit testing or using the debugger efficiently.
      */

@@ -8,9 +8,11 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 
 /**
- * Created by Damon Getsman on 10/19/17
  * This class is basically just for any of the CPU information that we can
  * procure via /proc
+ *
+ * @author Damon Getsman
+ * @since 2017-10-19
  */
 public class CPUDetails {
     private String vendorId, modelName, cpuFamily;
@@ -66,6 +68,7 @@ public class CPUDetails {
     /**
      * Method probes cpuinfo for various details about the hardware
      *
+     * @exception Exception generic on multiple issues
      */
     public void getMisc() throws Exception {
         RandomAccessFile ouah = null;
@@ -159,7 +162,7 @@ public class CPUDetails {
      * @param ctxt
      * @param processor - id of the core to probe
      * @return float[] - array of tiem spent in each mode
-     * @throws Exception
+     * @throws Exception generic
      */
     public int[] getCPUUsage(Context ctxt, int processor) throws Exception {
         int[] guhUpDown = new int[4];
